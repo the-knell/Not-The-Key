@@ -1,0 +1,32 @@
+[2026-11-04T19:28:12.479199+00:00] === HA PROOF START ===
+[2026-11-04T19:28:12.525180+00:00] onboarding endpoint status=200
+[2026-11-04T19:28:16.465988+00:00] STEP1 create user status=200 keys=['auth_code']
+[2026-11-04T19:28:16.474615+00:00] STEP2 code exchange status=200 keys=['access_token', 'token_type', 'refresh_token', 'expires_in', 'ha_auth_provider']
+[2026-11-04T19:28:16.475449+00:00] STEP2 access_token_expires_in=1800 refresh_prefix=b9ebbf0132bc...
+[2026-11-04T19:28:16.479874+00:00] STEP3 GET /api/ with A1 status=200 body={'message': 'API running.'}
+[2026-11-04T19:28:16.768735+00:00] STEP4 LLAT mint success=True
+[2026-11-04T19:28:16.768884+00:00] STEP4 refresh_tokens list: [{"id": "284ec489f000492dbf77c96ac609ab0b", "type": "normal", "client_name": null, "expire_at": "2027-02-02T19:28:16.472633+00:00"}, {"id": "9e880689360e43058a29baa1256ee9bb", "type": "long_lived_access_token", "client_name": "proof-script", "expire_at": null}]
+[2026-11-04T19:28:16.768968+00:00] STEP4 LLAT jwt iss=9e880689360e43058a29baa1256ee9bb exp-iat=315360000s = 3650.0 days
+[2026-11-04T19:28:16.776525+00:00] STEP4b GET /api/ with LLAT (pre-change) status=200
+[2026-11-04T19:28:16.776621+00:00] === waiting for .storage/auth to be persisted (driver polls host file via /config mount) ===
+[2026-11-04T19:28:16.776638+00:00] === PROOF PAUSE: host operator copies .storage/auth now ===
+[2026-11-04T19:28:18.777662+00:00] copy signal received
+[2026-11-04T19:28:18.778532+00:00] STEP5 copied material parsed: normal_refresh_prefix=b9ebbf0132bc... matches_live_R1=True expire_at_in_file=1801596496.472633
+[2026-11-04T19:28:21.404400+00:00] STEP6 change_password result success=True error=None
+[2026-11-04T19:28:23.414524+00:00] STEP7a refresh grant from COPIED token post-password-change status=200
+[2026-11-04T19:28:23.418889+00:00] STEP7a GET /api/ with access minted from copied refresh status=200 body={'message': 'API running.'}
+[2026-11-04T19:28:23.424967+00:00] STEP7a GET /api/config status=200 (location_name/version present: True)
+[2026-11-04T19:28:23.428311+00:00] STEP7b GET /api/ with pre-change 10y LLAT post-password-change status=200 body={'message': 'API running.'}
+[2026-11-04T19:28:23.431183+00:00] STEP7b GET /api/config with LLAT status=200
+[2026-11-04T19:28:23.440538+00:00] STEP8 login with OLD password status=400 type=None errors=None
+[2026-11-04T19:28:23.452439+00:00] STEP8 login with NEW password status=400 type=None has_code=False
+[2026-11-04T19:28:23.460432+00:00] STEP9 garbage bearer status=401 (expect 401)
+[2026-11-04T19:29:59.596086+00:00] === HA PROOF PART 2 ===
+[2026-11-04T19:29:59.976043+00:00] FIX-STEP8 login OLD password: type=form errors={'base': 'invalid_auth'} (expect form + invalid_auth)
+[2026-11-04T19:30:00.342866+00:00] FIX-STEP8 login NEW password: type=create_entry has_result=True (expect create_entry)
+[2026-11-04T19:30:00.402196+00:00] FIX-STEP10b refresh grant from copied token after its MANUAL revocation in part 1: status=400 body={'error': 'invalid_grant'} (expect 400)
+[2026-11-04T19:30:00.456184+00:00] FIX2 LLAT still valid before deleting its parent: status=200 (expect 200)
+[2026-11-04T19:30:00.971622+00:00] FIX2 ws auth with LLAT -> auth_ok
+[2026-11-04T19:30:00.990638+00:00] FIX2 delete LLAT parent via LLAT-authenticated WS: {"closed_during_delete": "WSMessageTypeError"}
+[2026-11-04T19:30:02.296495+00:00] FIX-STEP10c GET /api/ with LLAT AFTER manual revocation of parent: status=401 (expect 401)
+[2026-11-04T19:30:02.296619+00:00] === HA PROOF PART 2 END ===
